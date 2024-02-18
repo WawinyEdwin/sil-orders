@@ -1,7 +1,7 @@
 
 ### Installation Guide
 
-- Clone this repository [here](https://github.com/WawinyEdwin/wezacare-challenge.git).
+- Clone this repository [here](https://github.com/WawinyEdwin/sil-orders).
 - The `main` branch is the most stable branch at any given time, ensure you're working from it.
 - Create a virtual environment on the repo directory, `python3 -m venv venv`
 - Run `pip install -r requirements.txt` to install dependencies.
@@ -25,9 +25,12 @@
 - Run `python3 manage.py runserver 8001` to start the application.
 - Connect to the API using Postman or web client on port 8001.
 
+### Oauth2
+- The Identity provider for this project is Google.
+
 ### API Authorization
 Pass given authorization header for the requests
-- Authorization `Token <server_issued_token_for_exchanged_oauth_access_token>`
+- Authorization `Token <server_issued_token_for_exchanged_google_oauth_access_token>`
 
 ### API Endpoints
 
@@ -45,7 +48,7 @@ Pass given authorization header for the requests
 ### API Documentation
 
 Find the API documentation
-here [Postman Documentation](https://documenter.getpostman.com/view/17474568/2s93JqSR4c)
+here [Postman Documentation](https://documenter.getpostman.com/view/17474568/2sA2r823z9)
 
 ### Technologies Used
 
