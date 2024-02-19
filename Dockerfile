@@ -1,23 +1,16 @@
 # Dockerfile
 FROM python:3.10.4-slim-bullseye
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Set the working directory in the container
+RUN apt-get update && apt-get install -y build-essential git
+
 WORKDIR /app
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+EXPOSE $PORT
 
-# Copy the Django project code into the container
-COPY . .
+COPY . /app
 
-# Expose the port (Cloud Run uses the PORT environment variable)
-ENV PORT 8080
-EXPOSE 8080
+RUN pip install -r requirements.txt && python manage.py migrate
 
-# Run the Django development server
-CMD exec gunicorn silorders.wsgi:application --bind :$PORT --workers 1 --threads 8
+CMD python manage.py runserver 0.0.0.0:$PORT

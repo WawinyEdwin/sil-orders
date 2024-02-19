@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -16,40 +15,53 @@ jobs:
         python-version: [3.9]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Load .env file
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_SECRET: ${{ secrets.SECRET }} # Replace with your secrets
+          envkey_AT_USERNAME: ${{ secrets.AT_USERNAME }} # Replace with your secrets
+          envkey_AT_API_KEY: ${{ secrets.AT_API_KEY }} # Replace with your secrets
+          path: .env # Path to your .env file
+
+      - name: Run Tests
+        run: |
+          python manage.py test
+
+      - name: Build docker image
+        run: |-
+          docker build -t us-central1-docker.pkg.dev/bloodshare-395710/sil . \
+          --file ./Dockerfile
+
+      - name: Publish beta image to artifact registry
+        run: |-
+          export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
+          echo $TAG
+          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil
       
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Authenticate into Google Cloud Platform
+        uses: actions/gcloud/auth@master
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Configure Docker to use Google Cloud Platform
+        uses: actions/gcloud/cli@master
+        with:
+          args: "auth configure-docker --quiet"
 
-    - name: Load .env file
-      uses: SpicyPizza/create-envfile@v1
-      with:
-        envkey_SECRET: ${{ secrets.SECRET }}  # Replace with your secrets
-        envkey_AT_USERNAME: ${{ secrets.AT_USERNAME }}  # Replace with your secrets
-        envkey_AT_API_KEY: ${{ secrets.AT_API_KEY }}  # Replace with your secrets
-        path: .env  # Path to your .env file
-        
-    - name: Run Tests
-      run: |
-        python manage.py test
-
-    - name: GCP Auth
-      uses: google-github-actions/auth@v1
-      with: 
-        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
-
-    - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        version: '>= 363.0.0'
-
-    - name: Use gcloud To Deploy Staging
-      run: 'gcloud app deploy --quiet'
+      - name: Install beta commands and deploy
+        uses: actions/gcloud/cli@master
+        with:
+          args: "components install beta --quiet && gcloud beta run deploy sil --quiet --image us-central1-docker.pkg.dev/bloodshare-395710/sil --region us-central1 --project bloodshare-395710 --platform managed"
