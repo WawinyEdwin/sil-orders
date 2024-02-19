@@ -54,7 +54,7 @@ jobs:
         run: |-
           export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
           echo $TAG
-          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil:
+          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil:latest
 
       - name: Checkout code
         uses: actions/checkout@v2
