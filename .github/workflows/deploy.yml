@@ -41,15 +41,15 @@ jobs:
       run: |
         python manage.py test
 
-    - name: Gcp Auth
-      uses: 'google-github-actions/auth@v1'
+    - name: GCP Auth
+      uses: google-github-actions/auth@v1
       with: 
-        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+        credentials_json: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
       with:
         version: '>= 363.0.0'
 
-    - name: 'Use gcloud To Deploy Staging'
+    - name: Use gcloud To Deploy Staging
       run: 'gcloud app deploy --quiet'
