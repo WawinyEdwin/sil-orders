@@ -40,6 +40,11 @@ jobs:
         run: |
           python manage.py test
 
+      - name: Authenticate into Google Cloud Platform
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
       - name: Build docker image
         run: |-
           docker build -t us-central1-docker.pkg.dev/bloodshare-395710/sil . \
@@ -49,19 +54,25 @@ jobs:
         run: |-
           export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
           echo $TAG
-          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil
-      
+          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Authenticate into Google Cloud Platform
-        uses: actions/gcloud/auth@master
-        env:
-          GCLOUD_AUTH: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-      - name: Configure Docker to use Google Cloud Platform
-        uses: actions/gcloud/cli@master
+        uses: google-github-actions/auth@v0
         with:
-          args: "auth configure-docker --quiet"
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Install beta commands and deploy
-        uses: actions/gcloud/cli@master
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: Login to artifact registry
+        run: |-
+          gcloud auth print-access-token | docker login -u _json_key --password-stdin https://us-central1-docker.pkg.dev
+
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
-          args: "components install beta --quiet && gcloud beta run deploy sil --quiet --image us-central1-docker.pkg.dev/bloodshare-395710/sil --region us-central1 --project bloodshare-395710 --platform managed"
+          service: "beta-sil"
+          image: "us-central1-docker.pkg.dev/bloodshare-395710/sil:latest"
