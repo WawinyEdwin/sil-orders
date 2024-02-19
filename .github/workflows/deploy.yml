@@ -43,7 +43,7 @@ jobs:
       - name: Authenticate into Google Cloud Platform
         uses: google-github-actions/auth@v0
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Build docker image
         run: |-
@@ -62,7 +62,7 @@ jobs:
       - name: Authenticate into Google Cloud Platform
         uses: google-github-actions/auth@v0
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
