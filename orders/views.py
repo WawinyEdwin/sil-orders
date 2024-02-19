@@ -11,6 +11,7 @@ from orders.services.sms import SmsService
 
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def home(request):
     return Response(
         {
