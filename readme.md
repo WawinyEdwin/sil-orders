@@ -1,9 +1,13 @@
 
+### ORDERS API
+- Live API URL deployed to [PythonAnywhere](www.pythonanywhere.com) can be found [here](https://silorders.pythonanywhere.com/api/)
+
 ### Installation Guide
 
 - Clone this repository [here](https://github.com/WawinyEdwin/sil-orders).
 - The `main` branch is the most stable branch at any given time, ensure you're working from it.
 - Create a virtual environment on the repo directory, `python3 -m venv venv`
+- Activate your virtual env by doing `source venv/bin/activate`(on linux)
 - Run `pip install -r requirements.txt` to install dependencies.
 - Once the packages are installed preferably on a virtual env
 - Create a file `.env` file at the root directory, copy contents of the `.env.example` into the `.env` file and populate its contents appropriately.
@@ -56,6 +60,8 @@ here [Postman Documentation](https://documenter.getpostman.com/view/17474568/2sA
   more effectively.
 - [Django](https://www.djangoproject.com/) is a high-level Python web framework that encourages rapid development and
   clean, pragmatic design.
+- [SQLite](https://www.sqlite.org/) SQLite is an in-process library that implements a self-contained, serverless,
+  zero-configuration, transactional SQL database engine
 - [Django Rest Framework](https://www.django-rest-framework.org/) Django REST framework is a powerful and flexible
   toolkit for building Web APIs.
 - [Google Oauth Plaground](https://developers.google.com/oauthplayground/) Useful for simulating user consent and acquire Google issued access tokens.
