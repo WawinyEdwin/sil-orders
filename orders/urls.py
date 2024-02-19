@@ -4,6 +4,7 @@ from django.urls import path, re_path
 from orders import views
 
 urlpatterns = [
+    path("", views.home, name="home"),
     path("customers/", views.customers, name="customers"),
     path("customers/<int:customer_id>/orders/", views.customer_orders, name="orders"),
     re_path(

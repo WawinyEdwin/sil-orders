@@ -10,6 +10,17 @@ from orders.serializers import CustomerSerializer, OrderSerializer
 from orders.services.sms import SmsService
 
 
+@api_view(["GET"])
+def home(request):
+    return Response(
+        {
+            "message": "Welcome to the Orders API",
+            "detail": "Visit the postman documentation https://documenter.getpostman.com/view/17474568/2sA2r823z9",
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
 @api_view(["POST"])
 @permission_classes([AllowAny])
 @psa()
@@ -23,10 +34,9 @@ def register_by_access_token(request, backend):
             status=status.HTTP_200_OK,
         )
     return Response(
-            {"errors": {"token": "Invalid token"}},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
+        {"errors": {"token": "Invalid token"}},
+        status=status.HTTP_400_BAD_REQUEST,
+    )
 
 
 @api_view(["POST", "GET"])
