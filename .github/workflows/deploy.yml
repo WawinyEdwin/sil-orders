@@ -50,12 +50,6 @@ jobs:
           docker build -t us-central1-docker.pkg.dev/bloodshare-395710/sil . \
           --file ./Dockerfile
 
-      - name: Publish beta image to artifact registry
-        run: |-
-          export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
-          echo $TAG
-          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil:latest
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -63,6 +57,12 @@ jobs:
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Publish beta image to artifact registry
+        run: |-
+          export TAG=`echo $GITHUB_REF | awk -F/ '{print $NF}'`
+          echo $TAG
+          docker push us-central1-docker.pkg.dev/bloodshare-395710/sil:latest
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
