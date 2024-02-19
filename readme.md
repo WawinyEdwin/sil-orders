@@ -1,6 +1,6 @@
 
 ### ORDERS API
-- Live API URL deployed to [PythonAnywhere](www.pythonanywhere.com) can be found [here](https://silorders.pythonanywhere.com/api/)
+- Live API URL deployed to [PythonAnywhere](https://www.pythonanywhere.com) can be found [here](https://silorders.pythonanywhere.com/api/)
 
 ### Installation Guide
 
